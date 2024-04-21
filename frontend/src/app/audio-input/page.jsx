@@ -50,14 +50,10 @@ function AudioInput() {
         if (selectedFile) {
             const formData = new FormData();
             formData.append('file', selectedFile);
-            console.log(formData)
-            console.log(selectedFile)
-
             try {
                 const response = await axios.post('http://127.0.0.1:5000/predict', formData);
-                console.log('Audio uploaded successfully.');
-                const { prediction } = response.data;
-                console.log('Prediction:', prediction);
+                const prediction = response.data;
+                console.log(prediction.prediction[0]);
             } catch (error) {
                 console.error('Error:', error);
             }
