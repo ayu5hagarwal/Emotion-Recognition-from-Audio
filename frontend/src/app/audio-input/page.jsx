@@ -9,7 +9,8 @@ function AudioInput() {
     const mediaRecorderRef = useRef(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInput = useRef(null); // Added this line
-    const [isRecording, setIsRecording] = useState(false); // Added this line
+    const [isRecording, setIsRecording] = useState(false);
+    const [output, setOutput] = useState(null);
 
     const handleAudioChange = (e) => {
         const file = e.target.files[0];
@@ -70,7 +71,7 @@ function AudioInput() {
             try {
                 const response = await axios.post('http://127.0.0.1:5000/predict', formData);
                 const prediction = response.data;
-                console.log(prediction.prediction[0]);
+                setOutput(prediction.prediction[0]);
             } catch (error) {
                 console.error("Error:", error);
             }
