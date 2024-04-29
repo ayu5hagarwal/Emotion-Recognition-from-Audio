@@ -66,44 +66,17 @@ export default function Home() {
         }
     };
 
-    // const handleSubmit = async () => {
-
-    //     if (selectedFile) {
-    //         const formData = new FormData();
-    //         formData.append("file", selectedFile);
-    //         try {
-    //             const response = await axios.post(
-    //                 "http://127.0.0.1:5000/predict",
-    //                 formData
-    //             );
-    //             const prediction = response.data;
-    //             console.log(prediction.prediction[0]);
-    //         } catch (error) {
-    //             console.error("Error:", error);
-    //         }
-    //     } else {
-    //         console.log("No audio file or recording found.");
-    //     }
-    // };
-
     const handleSubmit = async () => {
         setIsSubmitted(true);
         if (selectedFile) {
             const formData = new FormData();
             formData.append("file", selectedFile);
             try {
-                // Simulate a delay for the request
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-
-                // Mock response
-                const response = {
-                    data: {
-                        prediction: ["Happy"],
-                    },
-                };
-
+                const response = await axios.post(
+                    "http://127.0.0.1:5000/predict",
+                    formData
+                );
                 const prediction = response.data;
-                console.log(prediction.prediction[0]);
                 setResult(prediction.prediction[0]);
             } catch (error) {
                 console.error("Error:", error);
@@ -112,6 +85,34 @@ export default function Home() {
             console.log("No audio file or recording found.");
         }
     };
+
+    // const handleSubmit = async () => {
+    //     setIsSubmitted(true);
+    //     if (selectedFile) {
+    //         const formData = new FormData();
+    //         formData.append("file", selectedFile);
+    //         try {
+    //             // Simulate a delay for the request
+    //             await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    //             // Mock response
+    //             const response = {
+    //                 data: {
+    //                     prediction: ["Happy"],
+    //                 },
+    //             };
+
+    //             const prediction = response.data;
+    //             console.log(prediction.prediction[0]);
+    //             setResult(prediction.prediction[0]);
+    //         } catch (error) {
+    //             console.error("Error:", error);
+    //         }
+    //     } else {
+    //         console.log("No audio file or recording found.");
+    //     }
+    // };
+
     return (
         <div className="flex flex-col items-center justify-center  bg-[#0b0c28] p-10 h-screen gap-6">
             <h1 className="text-4xl font-bold text-white">

@@ -13,13 +13,13 @@ export default function Navbar() {
                 id="navigation"
                 className="flex justify-evenly items-center gap-10"
             >
-                <Link href={"/"}>
+                {/* <Link href={"/"}>
                     <li className=" ">Home</li>
-                </Link>
+                </Link> */}
                 {/* <Link href={"/audio-input"}>
                     <li className=" "> Predict</li>
                 </Link> */}
-                <li className=" ">About</li>
+                {/* <li className=" ">About</li> */}
             </ul>
         </div>
     );
