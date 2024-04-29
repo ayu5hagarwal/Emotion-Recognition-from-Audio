@@ -1,6 +1,9 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import axios from "axios";
+import toWav from 'audiobuffer-to-wav';
+
 export default function Home() {
     const [audioSrc, setAudioSrc] = useState(null);
     const audioRef = useRef(null);
@@ -11,6 +14,7 @@ export default function Home() {
     const [fileName, setFileName] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [result, setResult] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleAudioChange = (e) => {
         const file = e.target.files[0];
@@ -42,11 +46,23 @@ export default function Home() {
                 }
             );
 
-            mediaRecorderRef.current.addEventListener("stop", () => {
-                const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+            mediaRecorderRef.current.addEventListener("stop", async () => {
+                const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
                 const audioUrl = URL.createObjectURL(audioBlob);
+
+                // Convert audioBlob to an ArrayBuffer
+                const arrayBuffer = await audioBlob.arrayBuffer();
+
+                // Convert ArrayBuffer to an AudioBuffer
+                const audioContext = new AudioContext();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+                // Convert AudioBuffer to a WAV Blob
+                const wavBuffer = toWav(audioBuffer);
+                const wavBlob = new Blob([wavBuffer], { type: 'audio/wav' });
+
                 setAudioSrc(audioUrl);
-                setSelectedFile(audioBlob);
+                setSelectedFile(wavBlob);  // Use the WAV Blob instead of the original Blob
             });
 
             mediaRecorderRef.current.start();
@@ -67,6 +83,7 @@ export default function Home() {
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);
         setIsSubmitted(true);
         if (selectedFile) {
             const formData = new FormData();
@@ -84,6 +101,7 @@ export default function Home() {
         } else {
             console.log("No audio file or recording found.");
         }
+        setIsLoading(false);
     };
 
     // const handleSubmit = async () => {
@@ -148,7 +166,7 @@ export default function Home() {
                     />
                 </div>
                 <div className="flex flex-col items-center gap-2   flex-1 ">
-                    {!isRecording ? (
+                    {/* {!isRecording ? (
                         <>
                             {!fileName && (
                                 <button
@@ -167,7 +185,7 @@ export default function Home() {
                         >
                             Stop Recording
                         </button>
-                    )}
+                    )} */}
                     {!isSubmitted && (
                         <button
                             className="bg-green-600 hover:bg-green-700 text-white transition-all duration-300 font-bold py-2 px-4 rounded-full min-w-44"
@@ -190,7 +208,12 @@ export default function Home() {
                         </div>
                     )}
 
-                    {result && (
+                    {isLoading ? (
+                        <div className="flex flex-row gap-5 mt-5 justify-center items-center py-2 px-4 rounded-full min-w-44 border border-zinc-500/20 hover:bg-zinc-600/50 transition-all duration-300">
+                            <div className="text-white ">Loading...</div>
+                        </div>
+
+                    ) : result && (
                         <div className="flex flex-row gap-5 mt-5 justify-center items-center py-2 px-4 rounded-full min-w-44 border border-zinc-500/20 hover:bg-zinc-600/50 transition-all duration-300">
                             <p className="text-white ">Predicted Emotion:</p>
                             <p className="text-white font-semibold ">

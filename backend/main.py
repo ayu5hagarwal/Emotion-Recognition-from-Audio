@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 
 app = Flask(__name__)
+CORS(app)
 
 def extract_features(data):
     sample_rate = 22050
@@ -36,7 +37,7 @@ def extract_features(data):
 def get_features(path):
 
     # duration and offset are used to take care of the no audio in start and the ending of each audio files as seen above.
-    data, sample_rate = librosa.load(path, duration=2.5, offset=0.6)
+    data, sample_rate = librosa.load(path)
     # print(data, sample_rate)
     # without augmentation
     res1 = extract_features(data)
