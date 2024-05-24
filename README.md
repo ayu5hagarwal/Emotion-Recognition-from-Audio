@@ -19,5 +19,32 @@ Emotion Recognition from Audio (ERA) is an innovative project that classifies hu
 ### Backend Setup (Flask)
 1. Navigate to the backend directory:
 ```bash
-   cd backend
+cd backend
+```
+2. Install the required Python packages:
+```bash
+pip install flask flask_cors tensorflow pickle numpy librosa
+```
+
+3. Start the Flask server:
+```bash
+python main.py
+```
+
+### Setting up the Frontend (Next.js)
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install the necessary npm packages:
+```bash
+npm install
+```
+
+3. Start the Next.js development server:
+```bash
+npm run dev
+```
+
 
